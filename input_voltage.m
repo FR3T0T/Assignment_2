@@ -1,6 +1,6 @@
 function V = input_voltage(t, params)
-    % Make t a column vector if it isn't already
-    t = t(:);
+    % Ensure t is a scalar
+    t = t(1);  % Just take the first element if it's a vector
     
     % Choose different voltage functions based on params.inputType
     switch params.inputType
