@@ -9,7 +9,8 @@ function dydt = rlc_equations(t, y, params)
     C = params.capacitance;
     
     % Apply input voltage (can be time-varying)
-    V = input_voltage(t, params);
+    % Ensure t is treated as a scalar - ode45 sometimes passes arrays
+    V = input_voltage(t(1), params);
     
     % Define the system of ODEs
     dydt = zeros(2,1);
