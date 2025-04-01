@@ -40,4 +40,20 @@ optimal_params = tune_parameters(target_response);
 % Save results to file
 save_results('rlc_output.dat', t, y, energy, power);
 
+
+% Add circuit diagram
+plot_circuit_diagram(params);
+
+% Analyze frequency response
+disp('Analyzing frequency response...');
+% Set frequency range from 1/10 of resonant to 10x resonant frequency
+resonant_f = 1/(2*pi*sqrt(params.inductance*params.capacitance));
+freq_range = [resonant_f/10, resonant_f*10];
+analyze_frequency_response(params, freq_range);
+
+% Run parameter sweep on resistance (add this if you have time)
+% disp('Performing parameter sweep on resistance...');
+% R_values = logspace(0, 2, 5);  % 1, 3.16, 10, 31.6, 100 ohms
+% parameter_sweep(params, 'resistance', R_values);
+
 disp('Simulation completed successfully.');
