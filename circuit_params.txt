@@ -7,5 +7,5 @@ initialCharge = 0
 initialCurrent = 0
 inputType = sine
 amplitude = 10
-frequency = 50    # Add this line (value in Hz)
+frequency = 50    % Value in Hz
 stepTime = 0

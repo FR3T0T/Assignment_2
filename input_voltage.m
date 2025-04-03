@@ -1,6 +1,8 @@
 function V = input_voltage(t, params)
-    % Ensure t is a scalar
-    t = t(1);  % Just take the first element if it's a vector
+    % Handle case where t is a vector
+    if numel(t) > 1
+        t = t(1);
+    end
     
     % Choose different voltage functions based on params.inputType
     switch params.inputType

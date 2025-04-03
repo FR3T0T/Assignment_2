@@ -15,14 +15,34 @@ function params = load_parameters(filename)
                 parts = strsplit(line, '=');
                 if length(parts) == 2
                     paramName = strtrim(parts{1});
-                    paramValue = str2double(strtrim(parts{2}));
+                    valuePart = strtrim(parts{2});
                     
-                    % Assign to params structure if valid
+                    % Remove inline comments (both % and #)
+                    percentIdx = strfind(valuePart, '%');
+                    hashIdx = strfind(valuePart, '#');
+                    
+                    % Find the first comment character, if any
+                    commentIdx = [];
+                    if ~isempty(percentIdx)
+                        commentIdx = [commentIdx, percentIdx(1)];
+                    end
+                    if ~isempty(hashIdx)
+                        commentIdx = [commentIdx, hashIdx(1)];
+                    end
+                    
+                    if ~isempty(commentIdx)
+                        valuePart = strtrim(valuePart(1:min(commentIdx)-1));
+                    end
+                    
+                    % Convert to number if possible
+                    paramValue = str2double(valuePart);
+                    
+                    % Assign to params structure
                     if ~isnan(paramValue)
                         params.(paramName) = paramValue;
                     else
                         % String parameter
-                        params.(paramName) = strtrim(parts{2});
+                        params.(paramName) = valuePart;
                     end
                 end
             end
