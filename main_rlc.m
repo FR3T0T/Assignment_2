@@ -34,7 +34,7 @@ end
 
 if run_frequency_analysis
     disp('Running frequency response analysis...');
-    analyze_frequency_response;
+    run_frequency_analysis;  % Changed from analyze_frequency_response to run_frequency_analysis
     disp('Frequency response analysis completed.');
     disp(' ');
 end
