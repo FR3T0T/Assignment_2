@@ -1,0 +1,10 @@
+% RLC Circuit Parameters for Critically Damped Response (ζ = 1.0)
+resistance = 20
+inductance = 1
+capacitance = 0.01
+simTime = 2
+initialCharge = 0
+initialCurrent = 0
+inputType = step
+amplitude = 10
+stepTime = 0
