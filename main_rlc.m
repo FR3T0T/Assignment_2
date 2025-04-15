@@ -10,7 +10,6 @@ run_damping_comparison = true;
 run_frequency_analysis = true;
 run_energy_distribution = true;
 run_parameter_sweep = true;
-run_parameter_tuning = true;
 
 % Display header
 disp('=========================================');
@@ -34,7 +33,7 @@ end
 
 if run_frequency_analysis
     disp('Running frequency response analysis...');
-    run_frequency_analysis;  % Changed from analyze_frequency_response to run_frequency_analysis
+    analyze_frequency_response;  % Changed from analyze_frequency_response to run_frequency_analysis
     disp('Frequency response analysis completed.');
     disp(' ');
 end
@@ -50,13 +49,6 @@ if run_parameter_sweep
     disp('Running parameter sweep analysis...');
     analyze_parameter_sweep;
     disp('Parameter sweep analysis completed.');
-    disp(' ');
-end
-
-if run_parameter_tuning
-    disp('Running parameter tuning example...');
-    analyze_parameter_tuning;
-    disp('Parameter tuning completed.');
     disp(' ');
 end
 
