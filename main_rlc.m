@@ -253,68 +253,7 @@ xlim([0, 5*tau]);
 saveas(gcf, 'energy_distribution.png');
 saveas(gcf, 'energy_distribution.fig');
 
-%% Part 5: Energy Distribution vs Resistance
-disp('Analyzing energy distribution vs resistance...');
-
-% Configure base parameters (underdamped circuit with step input)
-base_params = params_underdamped;
-base_params.initialCharge = 0;  
-base_params.initialCurrent = 0;
-base_params.inputType = 'step';
-base_params.amplitude = 10;     % 10V step input
-base_params.simTime = 0.5;      % Match the 0.5s shown in your plot
-
-% Define resistance values to test
-% These values will create the different curves shown in your image
-R_values = [1, 2, 5, 15, 40];  % Try these resistance values
-
-% Create figure
-figure('Name', 'Energy Distribution vs Resistance', 'Position', [300, 300, 800, 500]);
-hold on;
-grid on;
-
-% Color map for different resistance values
-colors = [0, 0.4470, 0.7410;    % Blue
-          0.8500, 0.3250, 0.0980; % Orange/red
-          0.9290, 0.6940, 0.1250; % Yellow
-          0.4940, 0.1840, 0.5560; % Purple
-          0.4660, 0.6740, 0.1880]; % Green
-
-% Time vector for simulation
-tspan = [0 0.5];  % 0 to 0.5 seconds to match your image
-
-% Simulate for each resistance value
-legend_entries = cell(length(R_values), 1);
-for i = 1:length(R_values)
-    % Set the resistance for this simulation
-    sim_params = base_params;
-    sim_params.resistance = R_values(i);
-    
-    % Calculate damping coefficient for legend
-    zeta = sim_params.resistance/(2*sqrt(sim_params.inductance/sim_params.capacitance));
-    legend_entries{i} = ['R = ' num2str(R_values(i)) ' \Omega (\zeta = ' num2str(zeta, '%.2f') ')'];
-    
-    % Run simulation
-    [t, y] = ode45(@(t,y) rlc_equations(t,y,sim_params), tspan, [0; 0]);
-    
-    % Calculate energy
-    [energy_data, ~, ~] = analyze_results(t, y, sim_params);
-    
-    % Plot total energy with color from color map
-    plot(t, energy_data.total, 'Color', colors(i,:), 'LineWidth', 2);
-end
-
-% Add labels and title
-xlabel('Time (s)', 'FontSize', 12);
-ylabel('Energy (J)', 'FontSize', 12);
-title('Energy Distribution vs Resistance', 'FontSize', 14);
-legend(legend_entries, 'Location', 'northeast', 'FontSize', 10);
-
-% Save the figure
-saveas(gcf, 'energy_vs_resistance.png');
-saveas(gcf, 'energy_vs_resistance.fig');
-
-%% Part 6: Parameter Sweep Analysis (Figure 4)
+%% Part 5: Parameter Sweep Analysis (Figure 4)
 disp('Performing parameter sweep analysis...');
 
 % Set the inductance and capacitance (fixed)
@@ -408,6 +347,6 @@ disp('Parameters for critical damping:');
 optimal_params = tune_parameters(target_response);
 
 % Optional: Add circuit diagram for visualization
-plot_circuit_diagram(params_underdamped);
+% plot_circuit_diagram(params_underdamped);
 
 disp('Simulation completed successfully.');
