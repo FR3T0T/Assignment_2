@@ -27,6 +27,9 @@ end
 % Create visualizations
 plot_results(t, y, energy, power);
 
+% Saves it as a data file
+save_results('rlc_output.dat', t, y, energy, power);
+
 %% Part 2: Compare underdamped, critically damped, and overdamped responses
 
 % Create parameter sets for three damping conditions
@@ -100,9 +103,6 @@ legend(['Underdamped (ζ = ' num2str(zeta_under, '%.2f') ')'], ...
 set(gca, 'FontSize', 11);
 box on;
 
-% Save the journal figure
-saveas(gcf, 'rlc_journal_figure.png');
-saveas(gcf, 'rlc_journal_figure.fig');
 
 %% Part 3: Frequency Response Analysis (Figure 2)
 
@@ -183,9 +183,6 @@ ylim([-90, 90]);
 % Add title to overall figure
 sgtitle('Frequency Response for Different Damping Ratios', 'FontSize', 14);
 
-% Save frequency response figure
-saveas(gcf, 'frequency_response_comparison.png');
-saveas(gcf, 'frequency_response_comparison.fig');
 
 %% Part 4: Energy Distribution with Initial Charge (Figure 3)
 disp('Simulating energy distribution with initial charge...');
@@ -249,9 +246,6 @@ text(0.5, initial_energy*0.65, 'while gradually dissipating in the resistor', 'F
 ylim([0, initial_energy*1.1]);
 xlim([0, 5*tau]);
 
-% Save the figure
-saveas(gcf, 'energy_distribution.png');
-saveas(gcf, 'energy_distribution.fig');
 
 %% Part 5: Parameter Sweep Analysis (Figure 4)
 disp('Performing parameter sweep analysis...');
@@ -330,9 +324,6 @@ text(R_critical*1.1, 5, 'ω_d = 0 at ζ = 1', 'FontSize', 9);
 % Add title for the entire figure
 sgtitle('Effect of Resistance on RLC Circuit Metrics (L = 1H, C = 0.01F)', 'FontSize', 14);
 
-% Save the figure
-saveas(gcf, 'parameter_sweep.png');
-saveas(gcf, 'parameter_sweep.fig');
 
 %% Part 7: Optional analyses
 
