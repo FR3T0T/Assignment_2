@@ -32,42 +32,21 @@ save_results('rlc_output.dat', t, y, energy, power);
 
 %% Part 2: Compare underdamped, critically damped, and overdamped responses
 
-% Create parameter sets for three damping conditions
-disp('Creating parameter sets for damping comparison...');
+% Load parameter sets for three damping conditions
+disp('Loading parameter sets for damping comparison...');
 
-% Underdamped parameters (ζ = 0.1)
-params_underdamped = params;
-params_underdamped.resistance = 2;       % Ohms
-params_underdamped.inductance = 1;       % Henry
-params_underdamped.capacitance = 0.01;   % Farad
-params_underdamped.inputType = 'step';
-params_underdamped.amplitude = 10;       % Volts
+% Load from parameter files
+params_underdamped = load_parameters('underdamped_params.txt');
+params_critical = load_parameters('critical_params.txt');
+params_overdamped = load_parameters('overdamped_params.txt');
 
-% Calculate damping coefficient
+% Calculate damping coefficients
 zeta_under = params_underdamped.resistance/(2*sqrt(params_underdamped.inductance/params_underdamped.capacitance));
 disp(['Underdamped: ζ = ' num2str(zeta_under)]);
 
-% Critically damped parameters (ζ = 1)
-params_critical = params;
-params_critical.resistance = 20;         % Ohms
-params_critical.inductance = 1;          % Henry
-params_critical.capacitance = 0.01;      % Farad
-params_critical.inputType = 'step';
-params_critical.amplitude = 10;          % Volts
-
-% Calculate damping coefficient
 zeta_critical = params_critical.resistance/(2*sqrt(params_critical.inductance/params_critical.capacitance));
 disp(['Critical: ζ = ' num2str(zeta_critical)]);
 
-% Overdamped parameters (ζ = 2)
-params_overdamped = params;
-params_overdamped.resistance = 40;       % Ohms
-params_overdamped.inductance = 1;        % Henry
-params_overdamped.capacitance = 0.01;    % Farad
-params_overdamped.inputType = 'step';
-params_overdamped.amplitude = 10;        % Volts
-
-% Calculate damping coefficient
 zeta_over = params_overdamped.resistance/(2*sqrt(params_overdamped.inductance/params_overdamped.capacitance));
 disp(['Overdamped: ζ = ' num2str(zeta_over)]);
 
@@ -77,16 +56,21 @@ disp('Running simulations for different damping conditions...');
 % Time span - extended for lower frequency
 tspan = [0 2];
 
+% Initial conditions for all simulations
+initial_conditions_under = [params_underdamped.initialCharge; params_underdamped.initialCurrent];
+initial_conditions_crit = [params_critical.initialCharge; params_critical.initialCurrent];
+initial_conditions_over = [params_overdamped.initialCharge; params_overdamped.initialCurrent];
+
 % Underdamped simulation
-[t_under, y_under] = ode45(@(t,y) rlc_equations(t,y,params_underdamped), tspan, initial_conditions);
+[t_under, y_under] = ode45(@(t,y) rlc_equations(t,y,params_underdamped), tspan, initial_conditions_under);
 [energy_under, power_under, metrics_under] = analyze_results(t_under, y_under, params_underdamped);
 
 % Critically damped simulation
-[t_crit, y_crit] = ode45(@(t,y) rlc_equations(t,y,params_critical), tspan, initial_conditions);
+[t_crit, y_crit] = ode45(@(t,y) rlc_equations(t,y,params_critical), tspan, initial_conditions_crit);
 [energy_crit, power_crit, metrics_crit] = analyze_results(t_crit, y_crit, params_critical);
 
 % Overdamped simulation
-[t_over, y_over] = ode45(@(t,y) rlc_equations(t,y,params_overdamped), tspan, initial_conditions);
+[t_over, y_over] = ode45(@(t,y) rlc_equations(t,y,params_overdamped), tspan, initial_conditions_over);
 [energy_over, power_over, metrics_over] = analyze_results(t_over, y_over, params_overdamped);
 
 % Create journal-style figure for time domain response (Figure 1)
@@ -187,7 +171,7 @@ sgtitle('Frequency Response for Different Damping Ratios', 'FontSize', 14);
 %% Part 4: Energy Distribution with Initial Charge (Figure 3)
 disp('Simulating energy distribution with initial charge...');
 
-% Configure parameters for underdamped circuit
+% Configure parameters for underdamped circuit with initial charge
 energy_params = params_underdamped;
 energy_params.initialCharge = 10;  % 10 Coulombs initial charge
 energy_params.initialCurrent = 0;  % Zero initial current
